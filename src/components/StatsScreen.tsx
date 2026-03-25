@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
-import { weeklyStats, activityBreakdown, currentUser, crew } from '@/lib/mockData';
+import { weeklyStats, activityBreakdown, crew } from '@/lib/mockData';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, Tooltip, CartesianGrid, AreaChart, Area } from 'recharts';
-import { TrendingUp, Target, Flame, Award } from 'lucide-react';
+import { TrendingUp, Target, Flame, Award, Skull } from 'lucide-react';
+import WeeklyAutopsy from './WeeklyAutopsy';
 
 const StatsScreen = () => {
   const avgSteps = Math.round(weeklyStats.reduce((s, d) => s + d.steps, 0) / 7);
@@ -13,6 +14,15 @@ const StatsScreen = () => {
       <div>
         <h1 className="text-xl font-display font-bold text-foreground">Stats</h1>
         <p className="text-xs text-muted-foreground">This week's performance</p>
+      </div>
+
+      {/* Weekly Autopsy — featured prominently */}
+      <div>
+        <div className="flex items-center gap-2 mb-3">
+          <Skull className="w-4 h-4 text-destructive" />
+          <p className="text-xs font-display font-semibold text-foreground uppercase tracking-wider">Weekly Autopsy</p>
+        </div>
+        <WeeklyAutopsy />
       </div>
 
       {/* Summary cards */}
@@ -124,24 +134,6 @@ const StatsScreen = () => {
           );
         })}
         <p className="text-[10px] text-muted-foreground mt-1">% of 10,000 step daily goal</p>
-      </motion.div>
-
-      {/* Streak history */}
-      <motion.div className="glass rounded-2xl p-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-        <p className="text-xs font-display font-semibold text-foreground uppercase tracking-wider mb-3">🔥 Streak Calendar</p>
-        <div className="grid grid-cols-7 gap-1.5">
-          {Array.from({ length: 28 }).map((_, i) => {
-            const active = i < 12 || (i > 14 && i < 24);
-            return (
-              <div
-                key={i}
-                className={`aspect-square rounded-md ${active ? 'gradient-fire' : 'bg-muted/30'}`}
-                style={{ opacity: active ? 0.4 + (i % 5) * 0.15 : 0.2 }}
-              />
-            );
-          })}
-        </div>
-        <p className="text-[10px] text-muted-foreground mt-2">Last 28 days • Current streak: {currentUser.streak} days</p>
       </motion.div>
     </div>
   );
