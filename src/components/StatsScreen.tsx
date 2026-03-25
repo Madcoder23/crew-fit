@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { weeklyStats, activityBreakdown, currentUser, crew } from '@/lib/mockData';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, Tooltip, CartesianGrid } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, Tooltip, CartesianGrid, AreaChart, Area } from 'recharts';
 import { TrendingUp, Target, Flame, Award } from 'lucide-react';
 
 const StatsScreen = () => {
@@ -36,74 +36,52 @@ const StatsScreen = () => {
         ))}
       </div>
 
-      {/* Steps bar chart */}
-      <motion.div
-        className="glass rounded-2xl p-4"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
+      {/* Steps area chart */}
+      <motion.div className="glass rounded-2xl p-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
         <p className="text-xs font-display font-semibold text-foreground uppercase tracking-wider mb-3">📊 Daily Steps</p>
         <ResponsiveContainer width="100%" height={160}>
-          <BarChart data={weeklyStats}>
-            <XAxis dataKey="day" tick={{ fontSize: 10, fill: 'hsl(240, 5%, 55%)' }} axisLine={false} tickLine={false} />
-            <YAxis hide />
-            <Tooltip
-              contentStyle={{ background: 'hsl(240, 12%, 12%)', border: '1px solid hsl(240, 10%, 20%)', borderRadius: '12px', fontSize: '12px', color: 'hsl(40, 20%, 95%)' }}
-              cursor={{ fill: 'hsla(16, 90%, 58%, 0.1)' }}
-            />
-            <Bar dataKey="steps" radius={[6, 6, 0, 0]} fill="url(#fireGradient)" />
+          <AreaChart data={weeklyStats}>
             <defs>
-              <linearGradient id="fireGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(16, 90%, 58%)" />
-                <stop offset="100%" stopColor="hsl(35, 95%, 55%)" />
+              <linearGradient id="stepsGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(210, 80%, 55%)" stopOpacity={0.4} />
+                <stop offset="100%" stopColor="hsl(210, 80%, 55%)" stopOpacity={0} />
               </linearGradient>
             </defs>
-          </BarChart>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 15%, 18%)" />
+            <XAxis dataKey="day" tick={{ fontSize: 10, fill: 'hsl(220, 10%, 50%)' }} axisLine={false} tickLine={false} />
+            <YAxis hide />
+            <Tooltip
+              contentStyle={{ background: 'hsl(220, 20%, 10%)', border: '1px solid hsl(220, 15%, 18%)', borderRadius: '12px', fontSize: '12px', color: 'hsl(210, 20%, 95%)' }}
+              cursor={{ fill: 'hsla(210, 80%, 55%, 0.1)' }}
+            />
+            <Area type="monotone" dataKey="steps" stroke="hsl(210, 80%, 55%)" strokeWidth={2} fill="url(#stepsGradient)" />
+          </AreaChart>
         </ResponsiveContainer>
       </motion.div>
 
       {/* Calories line chart */}
-      <motion.div
-        className="glass rounded-2xl p-4"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15 }}
-      >
+      <motion.div className="glass rounded-2xl p-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
         <p className="text-xs font-display font-semibold text-foreground uppercase tracking-wider mb-3">🔥 Calories Trend</p>
         <ResponsiveContainer width="100%" height={140}>
           <LineChart data={weeklyStats}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(240, 10%, 20%)" />
-            <XAxis dataKey="day" tick={{ fontSize: 10, fill: 'hsl(240, 5%, 55%)' }} axisLine={false} tickLine={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 15%, 18%)" />
+            <XAxis dataKey="day" tick={{ fontSize: 10, fill: 'hsl(220, 10%, 50%)' }} axisLine={false} tickLine={false} />
             <YAxis hide />
             <Tooltip
-              contentStyle={{ background: 'hsl(240, 12%, 12%)', border: '1px solid hsl(240, 10%, 20%)', borderRadius: '12px', fontSize: '12px', color: 'hsl(40, 20%, 95%)' }}
+              contentStyle={{ background: 'hsl(220, 20%, 10%)', border: '1px solid hsl(220, 15%, 18%)', borderRadius: '12px', fontSize: '12px', color: 'hsl(210, 20%, 95%)' }}
             />
-            <Line type="monotone" dataKey="calories" stroke="hsl(35, 95%, 55%)" strokeWidth={2} dot={{ fill: 'hsl(35, 95%, 55%)', r: 3 }} />
+            <Line type="monotone" dataKey="calories" stroke="hsl(190, 70%, 50%)" strokeWidth={2} dot={{ fill: 'hsl(190, 70%, 50%)', r: 3 }} />
           </LineChart>
         </ResponsiveContainer>
       </motion.div>
 
       {/* Activity breakdown pie chart */}
-      <motion.div
-        className="glass rounded-2xl p-4"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
+      <motion.div className="glass rounded-2xl p-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
         <p className="text-xs font-display font-semibold text-foreground uppercase tracking-wider mb-3">🏃 Activity Breakdown</p>
         <div className="flex items-center gap-4">
           <ResponsiveContainer width={120} height={120}>
             <PieChart>
-              <Pie
-                data={activityBreakdown}
-                cx="50%"
-                cy="50%"
-                innerRadius={30}
-                outerRadius={50}
-                dataKey="value"
-                strokeWidth={0}
-              >
+              <Pie data={activityBreakdown} cx="50%" cy="50%" innerRadius={30} outerRadius={50} dataKey="value" strokeWidth={0}>
                 {activityBreakdown.map((entry, i) => (
                   <Cell key={i} fill={entry.color} />
                 ))}
@@ -123,12 +101,7 @@ const StatsScreen = () => {
       </motion.div>
 
       {/* Crew comparison */}
-      <motion.div
-        className="glass rounded-2xl p-4"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.25 }}
-      >
+      <motion.div className="glass rounded-2xl p-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
         <div className="flex items-center gap-2 mb-3">
           <Award className="w-4 h-4 text-gold" />
           <p className="text-xs font-display font-semibold text-foreground uppercase tracking-wider">Crew Comparison</p>
@@ -154,12 +127,7 @@ const StatsScreen = () => {
       </motion.div>
 
       {/* Streak history */}
-      <motion.div
-        className="glass rounded-2xl p-4"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-      >
+      <motion.div className="glass rounded-2xl p-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
         <p className="text-xs font-display font-semibold text-foreground uppercase tracking-wider mb-3">🔥 Streak Calendar</p>
         <div className="grid grid-cols-7 gap-1.5">
           {Array.from({ length: 28 }).map((_, i) => {

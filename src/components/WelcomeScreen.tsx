@@ -47,7 +47,7 @@ const WelcomeScreen = ({ onComplete }: WelcomeScreenProps) => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden">
-      {/* Background gradient orbs */}
+      {/* Background gradient orbs — bluish */}
       <div className="absolute top-20 -left-20 w-60 h-60 rounded-full bg-ember/10 blur-3xl" />
       <div className="absolute bottom-20 -right-20 w-60 h-60 rounded-full bg-flame/10 blur-3xl" />
 
@@ -55,11 +55,11 @@ const WelcomeScreen = ({ onComplete }: WelcomeScreenProps) => {
         {step === 0 && (
           <motion.div key="welcome" className="text-center" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }}>
             <motion.div className="text-7xl mb-6" animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity }}>
-              🔥
+              💪
             </motion.div>
             <h1 className="text-4xl font-display font-bold gradient-fire-text mb-3">CREWFIT</h1>
             <p className="text-muted-foreground text-sm max-w-xs mx-auto leading-relaxed">
-              Build your crew. Burn together. Never workout alone again.
+              Build your crew. Push together. Never workout alone again.
             </p>
             <motion.button
               onClick={next}
@@ -73,7 +73,7 @@ const WelcomeScreen = ({ onComplete }: WelcomeScreenProps) => {
 
         {step === 1 && (
           <motion.div key="signup" className="w-full max-w-sm" initial={{ opacity: 0, x: 60 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -60 }}>
-            <h2 className="text-2xl font-display font-bold text-foreground mb-1">Join the fire 🔥</h2>
+            <h2 className="text-2xl font-display font-bold text-foreground mb-1">Join the crew 💪</h2>
             <p className="text-sm text-muted-foreground mb-6">Create your account</p>
             <div className="space-y-4">
               <div>
@@ -191,10 +191,9 @@ const WelcomeScreen = ({ onComplete }: WelcomeScreenProps) => {
             disabled={!canProceed()}
             className="w-full gradient-fire text-primary-foreground font-display font-semibold py-3 rounded-2xl shadow-fire disabled:opacity-40 disabled:shadow-none transition-all flex items-center justify-center gap-2"
           >
-            {step === 4 || (step === 3 && pairingType === 'friends') ? 'Find My Crew 🔥' : 'Continue'}
+            {step === 4 || (step === 3 && pairingType === 'friends') ? 'Find My Crew 💪' : 'Continue'}
             <ChevronRight className="w-4 h-4" />
           </button>
-          {/* Step dots */}
           <div className="flex justify-center gap-2 mt-4">
             {[1,2,3,4].map(s => (
               <div key={s} className={`w-2 h-2 rounded-full transition-all ${step >= s ? 'bg-ember' : 'bg-muted'}`} />

@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import MemberCard from './MemberCard';
-import { crew, roleDescriptions } from '@/lib/mockData';
-import { Shield, Trophy, TrendingUp } from 'lucide-react';
+import { crew, teamLeaderboard } from '@/lib/mockData';
+import { Shield, Trophy, TrendingUp, Globe, Flame } from 'lucide-react';
 
 const CrewScreen = () => {
   return (
@@ -11,8 +11,31 @@ const CrewScreen = () => {
         <p className="text-xs text-muted-foreground">Week {crew.weeklyStreak} streak • {crew.totalCalories} cal today</p>
       </div>
 
-      {/* Leaderboard */}
+      {/* Group Streak & Tokens */}
       <motion.div className="glass rounded-2xl p-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+        <div className="flex items-center gap-2 mb-3">
+          <Flame className="w-4 h-4 text-ember" />
+          <p className="text-xs font-display font-semibold text-foreground uppercase tracking-wider">Group Streak</p>
+        </div>
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-3xl font-display font-bold gradient-fire-text">{crew.groupStreak}</p>
+            <p className="text-[10px] text-muted-foreground">days (all members)</p>
+          </div>
+          <div className="text-right">
+            <div className="flex items-center gap-1">
+              <Shield className="w-4 h-4 text-ember" />
+              <p className="text-xs text-muted-foreground">Streak Tokens</p>
+            </div>
+            <p className="text-[10px] text-muted-foreground mt-1">Each member gets 2 tokens / 2 months</p>
+            <p className="text-[10px] text-muted-foreground">Can transfer to save a teammate</p>
+          </div>
+        </div>
+        <p className="text-[10px] text-muted-foreground/60 mt-2 italic">If any member misses a day without using a token, the group streak resets to 0.</p>
+      </motion.div>
+
+      {/* Team Leaderboard */}
+      <motion.div className="glass rounded-2xl p-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
         <div className="flex items-center gap-2 mb-3">
           <Trophy className="w-4 h-4 text-gold" />
           <p className="text-xs font-display font-semibold text-foreground uppercase tracking-wider">Today's Leaderboard</p>
@@ -28,6 +51,28 @@ const CrewScreen = () => {
         ))}
       </motion.div>
 
+      {/* Global Team Leaderboard */}
+      <motion.div className="glass rounded-2xl p-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+        <div className="flex items-center gap-2 mb-3">
+          <Globe className="w-4 h-4 text-ice" />
+          <p className="text-xs font-display font-semibold text-foreground uppercase tracking-wider">Global Team Rankings</p>
+        </div>
+        {teamLeaderboard.map((team, i) => {
+          const isOurTeam = team.id === 'team2';
+          return (
+            <div key={team.id} className={`flex items-center gap-3 py-2 border-b border-border/50 last:border-0 ${isOurTeam ? 'bg-ember/10 rounded-lg px-2 -mx-2' : ''}`}>
+              <span className={`text-sm font-display font-bold w-6 ${i === 0 ? 'gradient-fire-text' : 'text-muted-foreground'}`}>#{i + 1}</span>
+              <span className="text-sm font-medium text-foreground flex-1">
+                {team.name} {isOurTeam && <span className="text-[10px] text-ember">(You)</span>}
+              </span>
+              <span className="text-xs text-muted-foreground">{team.memberCount}👥</span>
+              <span className="text-sm font-display font-bold text-foreground">{team.totalScore.toLocaleString()}</span>
+              <span className="text-[10px] text-muted-foreground">pts</span>
+            </div>
+          );
+        })}
+      </motion.div>
+
       {/* Members */}
       <div>
         <div className="flex items-center gap-2 mb-3">
@@ -40,23 +85,6 @@ const CrewScreen = () => {
           ))}
         </div>
       </div>
-
-      {/* Role guide */}
-      <motion.div className="glass rounded-2xl p-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-        <div className="flex items-center gap-2 mb-3">
-          <TrendingUp className="w-4 h-4 text-flame" />
-          <p className="text-xs font-display font-semibold text-foreground uppercase tracking-wider">Role Identity</p>
-        </div>
-        <div className="grid grid-cols-2 gap-2">
-          {Object.values(roleDescriptions).map(r => (
-            <div key={r.title} className="bg-muted/30 rounded-xl p-3">
-              <p className="text-lg">{r.badge}</p>
-              <p className="text-xs font-display font-semibold text-foreground">{r.title}</p>
-              <p className="text-[10px] text-muted-foreground mt-0.5">{r.description}</p>
-            </div>
-          ))}
-        </div>
-      </motion.div>
 
       {/* Weekly Autopsy Report */}
       <motion.div className="glass rounded-2xl p-4 border-l-4 border-ice" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
