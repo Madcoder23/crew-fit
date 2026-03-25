@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import MemberCard from './MemberCard';
 import { crew, teamLeaderboard } from '@/lib/mockData';
-import { Shield, Trophy, TrendingUp, Globe, Flame } from 'lucide-react';
+import { Shield, Trophy, Globe, Flame } from 'lucide-react';
 
 const CrewScreen = () => {
   return (
@@ -85,19 +85,6 @@ const CrewScreen = () => {
           ))}
         </div>
       </div>
-
-      {/* Weekly Autopsy Report */}
-      <motion.div className="glass rounded-2xl p-4 border-l-4 border-ice" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-        <p className="text-xs font-display font-semibold text-foreground uppercase tracking-wider mb-2">📋 Weekly Autopsy Report</p>
-        <div className="space-y-2 text-xs text-muted-foreground">
-          <p>✅ <span className="text-foreground font-medium">Arjun</span> hit all 7 daily goals — promoted to Captain</p>
-          <p>⚠️ <span className="text-foreground font-medium">Maya</span> missed 3 days — streak reset to 0</p>
-          <p>🔥 Crew burned 8,420 total calories (↑12% vs last week)</p>
-          <p>🧩 Puzzle completed 4/7 days</p>
-          <p>📍 1 weekly meetup completed (+50 XP each)</p>
-        </div>
-        <p className="text-[10px] text-muted-foreground/50 mt-2 italic">Failure: Maya's 3-day drop caused puzzle incompletion on Mon, Thu, Fri</p>
-      </motion.div>
     </div>
   );
 };
