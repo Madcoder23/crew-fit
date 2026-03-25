@@ -7,24 +7,48 @@ export interface CrewMember {
   stepsToday: number;
   caloriesBurned: number;
   weeklyActivity: number[];
-  puzzlePiece: boolean; // has contributed today
+  puzzlePiece: boolean;
+  tokensRemaining: number; // 0-2 streak protection tokens
+  goalCompleted: boolean; // today's goal status
 }
 
 export interface Crew {
   id: string;
   name: string;
-  campfireLevel: number; // 0-100
+  campfireLevel: number;
   totalCalories: number;
   weeklyStreak: number;
   members: CrewMember[];
-  puzzleProgress: number; // 0-6 pieces
+  puzzleProgress: number;
+  groupStreak: number;
+  puzzleConsecutiveWeeks: number; // consecutive weeks puzzle completed
+  totalScore: number;
+}
+
+export interface TeamLeaderboardEntry {
+  id: string;
+  name: string;
+  totalScore: number;
+  weeklyStreak: number;
+  memberCount: number;
+}
+
+export interface MeetupSchedule {
+  id: string;
+  proposedDate: string;
+  proposedTime: string;
+  location: string;
+  coordinates: { lat: number; lng: number };
+  availability: Record<string, boolean>; // memberId -> available
+  confirmed: boolean;
+  bonusAwarded: boolean;
 }
 
 export interface ActivityData {
   date: string;
   steps: number;
   calories: number;
-  distance: number; // km
+  distance: number;
   activeMinutes: number;
 }
 
@@ -54,14 +78,16 @@ export const currentUser: CrewMember = {
   caloriesBurned: 420,
   weeklyActivity: [8200, 6500, 9100, 7800, 5200, 8900, 7842],
   puzzlePiece: true,
+  tokensRemaining: 2,
+  goalCompleted: true,
 };
 
 export const crewMembers: CrewMember[] = [
   currentUser,
-  { id: 'user2', name: 'Arjun', avatar: '💪', role: 'Captain', streak: 24, stepsToday: 10200, caloriesBurned: 580, weeklyActivity: [9500, 8700, 10200, 9800, 7600, 11000, 10200], puzzlePiece: true },
-  { id: 'user3', name: 'Priya', avatar: '🧘', role: 'Enforcer', streak: 18, stepsToday: 6400, caloriesBurned: 320, weeklyActivity: [7200, 5800, 8400, 6900, 4300, 7800, 6400], puzzlePiece: true },
-  { id: 'user4', name: 'Rahul', avatar: '🚴', role: 'Motivator', streak: 8, stepsToday: 3200, caloriesBurned: 180, weeklyActivity: [6100, 4500, 7300, 5200, 3800, 6600, 3200], puzzlePiece: false },
-  { id: 'user5', name: 'Maya', avatar: '🏋️', role: 'Rookie', streak: 3, stepsToday: 1500, caloriesBurned: 90, weeklyActivity: [3200, 2100, 4500, 2800, 1900, 3900, 1500], puzzlePiece: false },
+  { id: 'user2', name: 'Arjun', avatar: '💪', role: 'Captain', streak: 24, stepsToday: 10200, caloriesBurned: 580, weeklyActivity: [9500, 8700, 10200, 9800, 7600, 11000, 10200], puzzlePiece: true, tokensRemaining: 1, goalCompleted: true },
+  { id: 'user3', name: 'Priya', avatar: '🧘', role: 'Enforcer', streak: 18, stepsToday: 6400, caloriesBurned: 320, weeklyActivity: [7200, 5800, 8400, 6900, 4300, 7800, 6400], puzzlePiece: true, tokensRemaining: 2, goalCompleted: true },
+  { id: 'user4', name: 'Rahul', avatar: '🚴', role: 'Motivator', streak: 8, stepsToday: 3200, caloriesBurned: 180, weeklyActivity: [6100, 4500, 7300, 5200, 3800, 6600, 3200], puzzlePiece: false, tokensRemaining: 0, goalCompleted: false },
+  { id: 'user5', name: 'Maya', avatar: '🏋️', role: 'Rookie', streak: 3, stepsToday: 1500, caloriesBurned: 90, weeklyActivity: [3200, 2100, 4500, 2800, 1900, 3900, 1500], puzzlePiece: false, tokensRemaining: 1, goalCompleted: false },
 ];
 
 export const crew: Crew = {
@@ -72,6 +98,29 @@ export const crew: Crew = {
   weeklyStreak: 5,
   members: crewMembers,
   puzzleProgress: 3,
+  groupStreak: 5,
+  puzzleConsecutiveWeeks: 2,
+  totalScore: 4850,
+};
+
+export const teamLeaderboard: TeamLeaderboardEntry[] = [
+  { id: 'team1', name: 'Thunder Bolts ⚡', totalScore: 6200, weeklyStreak: 8, memberCount: 5 },
+  { id: 'team2', name: 'Iron Wolves 🐺', totalScore: 4850, weeklyStreak: 5, memberCount: 5 },
+  { id: 'team3', name: 'Blaze Squad 🔥', totalScore: 4500, weeklyStreak: 4, memberCount: 4 },
+  { id: 'team4', name: 'Night Runners 🌙', totalScore: 3900, weeklyStreak: 3, memberCount: 6 },
+  { id: 'team5', name: 'Peak Climbers 🏔️', totalScore: 3400, weeklyStreak: 6, memberCount: 5 },
+  { id: 'team6', name: 'Aqua Force 🌊', totalScore: 2800, weeklyStreak: 2, memberCount: 4 },
+];
+
+export const meetupSchedule: MeetupSchedule = {
+  id: 'meetup1',
+  proposedDate: '2026-03-28',
+  proposedTime: '6:30 PM',
+  location: 'Central Park Track',
+  coordinates: { lat: 12.9716, lng: 77.5946 },
+  availability: { user1: true, user2: true, user3: false, user4: true, user5: false },
+  confirmed: false,
+  bonusAwarded: false,
 };
 
 export const weeklyStats: WeeklyStats[] = [
@@ -85,10 +134,10 @@ export const weeklyStats: WeeklyStats[] = [
 ];
 
 export const activityBreakdown = [
-  { name: 'Walking', value: 45, color: 'hsl(16, 90%, 58%)' },
-  { name: 'Running', value: 25, color: 'hsl(35, 95%, 55%)' },
-  { name: 'Cycling', value: 15, color: 'hsl(45, 100%, 60%)' },
-  { name: 'Gym', value: 15, color: 'hsl(200, 80%, 50%)' },
+  { name: 'Walking', value: 45, color: 'hsl(210, 80%, 55%)' },
+  { name: 'Running', value: 25, color: 'hsl(190, 70%, 50%)' },
+  { name: 'Cycling', value: 15, color: 'hsl(170, 60%, 55%)' },
+  { name: 'Gym', value: 15, color: 'hsl(250, 70%, 60%)' },
 ];
 
 export const chatMessages: ChatMessage[] = [

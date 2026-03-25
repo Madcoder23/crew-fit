@@ -1,6 +1,8 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { CrewMember } from '@/lib/mockData';
 import { roleDescriptions } from '@/lib/mockData';
+import { ChevronDown, CheckCircle2, XCircle, Shield } from 'lucide-react';
 
 interface MemberCardProps {
   member: CrewMember;
@@ -9,6 +11,7 @@ interface MemberCardProps {
 }
 
 const MemberCard = ({ member, index, isCurrentUser }: MemberCardProps) => {
+  const [showRole, setShowRole] = useState(false);
   const role = roleDescriptions[member.role];
   
   return (
@@ -25,14 +28,32 @@ const MemberCard = ({ member, index, isCurrentUser }: MemberCardProps) => {
             <p className="font-display font-semibold text-sm text-foreground truncate">
               {isCurrentUser ? 'You' : member.name}
             </p>
-            <span className="text-xs">{role.badge}</span>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
-              {role.title}
-            </span>
+            {/* Clickable role badge */}
+            <button
+              onClick={() => setShowRole(!showRole)}
+              className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground hover:bg-muted/80 transition-colors"
+            >
+              <span>{role.badge}</span>
+              <span>{role.title}</span>
+              <ChevronDown className={`w-3 h-3 transition-transform ${showRole ? 'rotate-180' : ''}`} />
+            </button>
           </div>
           <div className="flex items-center gap-3 mt-1">
-            <span className="text-xs text-muted-foreground">🔥 {member.streak} day streak</span>
-            <span className="text-xs text-muted-foreground">👣 {member.stepsToday.toLocaleString()}</span>
+            {/* Token indicators */}
+            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Shield className="w-3 h-3 text-ember" />
+              {member.tokensRemaining}/2
+            </span>
+            {/* Goal completion */}
+            {member.goalCompleted ? (
+              <span className="flex items-center gap-1 text-xs text-success">
+                <CheckCircle2 className="w-3 h-3" /> Done
+              </span>
+            ) : (
+              <span className="flex items-center gap-1 text-xs text-destructive">
+                <XCircle className="w-3 h-3" /> Pending
+              </span>
+            )}
           </div>
         </div>
         <div className="text-right">
@@ -40,21 +61,28 @@ const MemberCard = ({ member, index, isCurrentUser }: MemberCardProps) => {
           <p className="text-[10px] text-muted-foreground">cal</p>
         </div>
       </div>
-      
-      {/* Mini activity bars */}
-      <div className="flex items-end gap-1 mt-3 h-8">
-        {member.weeklyActivity.map((val, i) => {
-          const max = Math.max(...member.weeklyActivity);
-          const height = (val / max) * 100;
-          return (
-            <div
-              key={i}
-              className="flex-1 rounded-t-sm gradient-fire transition-all"
-              style={{ height: `${height}%`, opacity: i === 6 ? 1 : 0.5 }}
-            />
-          );
-        })}
-      </div>
+
+      {/* Role description dropdown */}
+      <AnimatePresence>
+        {showRole && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="mt-3 pt-3 border-t border-border/50">
+              <div className="flex items-start gap-2 bg-muted/30 rounded-xl p-3">
+                <span className="text-lg">{role.badge}</span>
+                <div>
+                  <p className="text-xs font-display font-semibold text-foreground">{role.title}</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">{role.description}</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
