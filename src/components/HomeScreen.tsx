@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Bell } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import Campfire from './Campfire';
 import PsychologyCard from './PsychologyCard';
 import MeetupScheduler from './MeetupScheduler';
-import NudgeSystem from './NudgeSystem';
 import { crew, psychologyTips } from '@/lib/mockData';
 
 const aiPersonalizedTips = [
@@ -16,16 +15,6 @@ const aiPersonalizedTips = [
 
 const HomeScreen = () => {
   const [showAITips, setShowAITips] = useState(true);
-  const [showNudge, setShowNudge] = useState(false);
-
-  // Simulate 9PM nudge trigger
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const hasIncomplete = crew.members.some(m => !m.goalCompleted);
-      if (hasIncomplete) setShowNudge(true);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <div className="px-4 pt-4 pb-4 space-y-5 max-w-lg mx-auto">
@@ -45,26 +34,6 @@ const HomeScreen = () => {
         <h1 className="text-2xl font-display font-bold gradient-fire-text relative z-10 mt-1">{crew.name}</h1>
         <p className="text-xs text-muted-foreground relative z-10 mt-1">{crew.members.length} members • Week {crew.weeklyStreak} streak</p>
       </motion.div>
-
-      {/* Nudge alert button */}
-      {crew.members.some(m => !m.goalCompleted) && (
-        <motion.button
-          className="w-full glass rounded-2xl p-3 flex items-center gap-3 border border-destructive/20"
-          style={{ background: 'hsla(0, 50%, 12%, 0.6)' }}
-          onClick={() => setShowNudge(true)}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-        >
-          <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1, repeat: Infinity }}>
-            <Bell className="w-5 h-5 text-destructive" />
-          </motion.div>
-          <div className="flex-1 text-left">
-            <p className="text-xs font-display font-semibold text-foreground">9PM Nudge Active</p>
-            <p className="text-[10px] text-destructive">{crew.members.filter(m => !m.goalCompleted).length} members haven't completed today's goal</p>
-          </div>
-          <span className="text-xs text-ember font-medium">View →</span>
-        </motion.button>
-      )}
 
       {/* Group Campfire — prominent */}
       <motion.div
@@ -100,9 +69,6 @@ const HomeScreen = () => {
         <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-3">📍 Weekly Meetup</p>
         <MeetupScheduler />
       </div>
-
-      {/* Nudge System Modal */}
-      <NudgeSystem isVisible={showNudge} onClose={() => setShowNudge(false)} />
     </div>
   );
 };

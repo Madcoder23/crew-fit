@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Skull, AlertTriangle, TrendingDown, Calendar, Flame } from 'lucide-react';
+import { Skull, AlertTriangle, TrendingDown, Calendar, Flame, RotateCcw, UserX } from 'lucide-react';
 import { crew } from '@/lib/mockData';
 
 const failureLog = [
@@ -106,6 +106,18 @@ const WeeklyAutopsy = () => {
           <p className="text-xs text-muted-foreground leading-relaxed italic">
             "{aiVerdict}"
           </p>
+        </div>
+
+        {/* Action buttons */}
+        <div className="grid grid-cols-2 gap-2 pt-1">
+          <button className="flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-medium bg-ember/20 text-ember border border-ember/30 hover:bg-ember/30 transition-colors">
+            <RotateCcw className="w-3.5 h-3.5" />
+            Restart Streak
+          </button>
+          <button className="flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-medium bg-destructive/20 text-destructive border border-destructive/30 hover:bg-destructive/30 transition-colors">
+            <UserX className="w-3.5 h-3.5" />
+            Dissolve Crew
+          </button>
         </div>
       </div>
     </motion.div>
